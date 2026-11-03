@@ -111,7 +111,7 @@ export const createTransaction = async (req: MyReq, res: Response) => {
     return res.status(201).json(newTransaction);
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(500).json(error.errors);
+      return res.status(500).json(error.issues);
     }
     return res
       .status(500)
@@ -121,7 +121,7 @@ export const createTransaction = async (req: MyReq, res: Response) => {
 
 export const detailTransaction = async (req: MyReq, res: Response) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(req.params.id as string);
 
     const transaction: TransactionModel = await knex("transactions")
       .where({ id })
@@ -136,7 +136,7 @@ export const detailTransaction = async (req: MyReq, res: Response) => {
       .json({ ...transaction, value: transaction.value / 100 });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(500).json(error.errors);
+      return res.status(500).json(error.issues);
     }
 
     return res
@@ -148,7 +148,7 @@ export const detailTransaction = async (req: MyReq, res: Response) => {
 export const updateTransaction = async (req: MyReq, res: Response) => {
   const userId = req.userData?.id;
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(req.params.id as string);
 
     const { description, value, type, date, category_id } =
       schemaBodyTransaction.parse(req.body);
@@ -168,7 +168,7 @@ export const updateTransaction = async (req: MyReq, res: Response) => {
     return res.status(200).json({ message: "Updated successfully" });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json(error.errors);
+      return res.status(400).json(error.issues);
     }
 
     return res
@@ -179,7 +179,7 @@ export const updateTransaction = async (req: MyReq, res: Response) => {
 
 export const deleteTransaction = async (req: MyReq, res: Response) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(req.params.id as string);
 
     const transaction = await knex("transactions").where({ id }).first();
 
