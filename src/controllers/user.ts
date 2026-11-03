@@ -154,7 +154,7 @@ export const updateUser = async (req: MyReq, res: Response) => {
     }
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(401).json(error.errors);
+      return res.status(401).json(error.issues);
     }
 
     return res
